@@ -1,68 +1,76 @@
+//variable to access the images in the api
+var imagePath = "https://www.themoviedb.org/t/p/w220_and_h330_face";
+
 var model = {
     watchlistItems: [],
     browseItems: []
-  }
-  
-  
-  var api = {
+}
+
+
+var api = {
     root: "https://api.themoviedb.org/3",
-    token: "TODO" // TODO 0 put your api key here
-  }
-  
-  
-  /**
-   * Makes an AJAX request to themoviedb.org, asking for some movies
-   * if successful, updates the model.browseItems appropriately, and then invokes
-   * the callback function that was passed in
-   */
-  function discoverMovies(callback) {
-      $.ajax({
-          url: api.root + "/discover/movie",
-          data: {
-              api_key: api.token,
-          },
-          success: function(response) {
-              console.log("We got a response from The Movie DB!");
-              console.log(response);
-              
-              // TODO 2
-              // update the model, setting its .browseItems property equal to the movies we recieved in the response
-              
-              // invoke the callback function that was passed in. 
-              callback();
-          }
-      });
-    
-  }
-  
-  
-  /**
-   * re-renders the page with new content, based on the current state of the model
-   */
-  function render() {
+    token: "2e24785394d993f26fba2a923499635d" // TODO 0 put your api key here - done
+}
+
+
+/**
+ * Makes an AJAX request to themoviedb.org, asking for some movies
+ * if successful, updates the model.browseItems appropriately, and then invokes
+ * the callback function that was passed in
+ */
+function discoverMovies(callback) {
+    $.ajax({
+        url: api.root + "/discover/movie",
+        data: {
+            api_key: api.token,
+        },
+        success: function (response) {
+            console.log("We got a response from The Movie DB!");
+            console.log(response);
+
+            // TODO 2 - done
+            // update the model, setting its .browseItems property equal to the movies we recieved in the response
+            model.browseItems = response.results;
+
+            // invoke the callback function that was passed in. 
+            callback();
+        }
+    });
+
+}
+
+
+/**
+ * re-renders the page with new content, based on the current state of the model
+ */
+function render() {
     // TODO 7
     // clear everything from both lists
-    
+
     // TODO 6
     // for each movie on the user's watchlist, insert a list item into the <ul> in the watchlist section
-    
+
     // for each movie on the current browse list, 
-    model.browseItems.forEach(function(movie) {
-          // TODO 3
-          // insert a list item into the <ul> in the browse section
-          
-          // TODO 4
-          // the list item should include a button that says "Add to Watchlist"
-          
-          // TODO 5
-          // when the button is clicked, this movie should be added to the model's watchlist and render() should be called again
+    model.browseItems.forEach(function (movie) {
+        // TODO 3
+        // insert a list item into the <ul> in the browse section
+        let item = $('<div class="item">');
+        item.append(`<p>${movie.title}</p>`);
+        item.append(`<img src="${imagePath+movie.poster_path}">`)
+        $(".container").append(item);
+
+        // TODO 4
+        // the list item should include a button that says "Add to Watchlist"
+
+        // TODO 5
+        // when the button is clicked, this movie should be added to the model's watchlist and render() should be called again
     });
-    
-  }
-  
-  
-  // When the HTML document is ready, we call the discoverMovies function,
-  // and pass the render function as its callback
-  $(document).ready(function() {
+
+}
+
+
+// When the HTML document is ready, we call the discoverMovies function,
+// and pass the render function as its callback
+$(document).ready(function () {
     discoverMovies(render);
-  });
+});
