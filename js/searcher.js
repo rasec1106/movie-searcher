@@ -46,28 +46,50 @@ function discoverMovies(callback) {
 function render() {
     // TODO 7
     // clear everything from both lists
+    $('.container').empty();
+    $('.container2').empty();
+
 
     // TODO 6
     // for each movie on the user's watchlist, insert a list item into the <ul> in the watchlist section
+    model.watchlistItems.forEach(function (movie) {
+        let item = createItem(movie);
+        $('.container2').append(item);
+    });
 
     // for each movie on the current browse list, 
     model.browseItems.forEach(function (movie) {
         // TODO 3
         // insert a list item into the <ul> in the browse section
-        let item = $('<div class="item">');
-        item.append(`<p>${movie.title}</p>`);
-        item.append(`<img src="${imagePath+movie.poster_path}">`)
-        $(".container").append(item);
+        let item = createItem(movie);
+
 
         // TODO 4
         // the list item should include a button that says "Add to Watchlist"
+        let button = $('<button type="button">Add to watchlist</button>');
 
         // TODO 5
         // when the button is clicked, this movie should be added to the model's watchlist and render() should be called again
+        button.click(() => {
+            if (!model.watchlistItems.includes(movie)) {
+                model.watchlistItems.push(movie);
+                render();
+            } else{
+                alert("You already have this movie");
+            }
+        });
+        item.append(button);
+        $(".container").append(item);
     });
 
 }
 
+function createItem(movie) {
+    let item = $('<div class="item">');
+    item.append(`<p>${movie.title}</p>`);
+    item.append(`<img src="${imagePath+movie.poster_path}" class="movie-image">`);
+    return item;
+}
 
 // When the HTML document is ready, we call the discoverMovies function,
 // and pass the render function as its callback
